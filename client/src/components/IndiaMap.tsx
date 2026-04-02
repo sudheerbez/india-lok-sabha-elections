@@ -8,6 +8,35 @@ interface IndiaMapProps {
   onStateHover: (state: string | null) => void;
 }
 
+// Telangana was carved out of Andhra Pradesh in 2014.
+// For elections before 2014, the data only has combined "Andhra Pradesh".
+// We need to color the Telangana polygon with AP's data for those years.
+// Similarly, Ladakh was carved from J&K in 2019 — for older elections,
+// Ladakh should use J&K's data.
+function getStateData(
+  stateName: string,
+  stateResults: Map<string, { winningParty: string; seats: { party: string; count: number }[] }>,
+  year: number
+) {
+  // Direct match first
+  const direct = stateResults.get(stateName);
+  if (direct) return { result: direct, displayName: stateName };
+
+  // Pre-2014: Telangana didn't exist separately; use Andhra Pradesh data
+  if (stateName === "Telangana" && year < 2014) {
+    const ap = stateResults.get("Andhra Pradesh");
+    if (ap) return { result: ap, displayName: "Andhra Pradesh (undivided)" };
+  }
+
+  // Pre-2019: Ladakh was part of Jammu and Kashmir
+  if (stateName === "Ladakh" && year < 2019) {
+    const jk = stateResults.get("Jammu and Kashmir");
+    if (jk) return { result: jk, displayName: "Jammu and Kashmir (undivided)" };
+  }
+
+  return null;
+}
+
 export default function IndiaMap({ election, onStateHover }: IndiaMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -39,10 +68,10 @@ export default function IndiaMap({ election, onStateHover }: IndiaMapProps) {
 
     svg.attr("viewBox", `0 0 ${width} ${height}`);
 
-    const states = topojson.feature(geoData, geoData.objects.states) as any;
+    const states = topojson.feature(geoData, geoData.objects["india-states"]) as any;
     const stateBorders = topojson.mesh(
       geoData,
-      geoData.objects.states,
+      geoData.objects["india-states"],
       (a: any, b: any) => a !== b
     );
 
@@ -60,29 +89,30 @@ export default function IndiaMap({ election, onStateHover }: IndiaMapProps) {
       .attr("class", "state-path")
       .attr("d", path as any)
       .attr("fill", (d: any) => {
-        const stateName = d.properties.NAME_1;
-        const result = stateResults.get(stateName);
-        if (result) {
-          return partyColors[result.winningParty] || "#ccc";
+        const stateName = d.properties.ST_NM;
+        const data = getStateData(stateName, stateResults, election.year);
+        if (data) {
+          return partyColors[data.result.winningParty] || "#ccc";
         }
         return "hsl(var(--muted))";
       })
       .attr("stroke", "hsl(var(--background))")
       .attr("stroke-width", 0.5)
       .on("mouseenter", function (event: MouseEvent, d: any) {
-        const stateName = d.properties.NAME_1;
+        const stateName = d.properties.ST_NM;
         onStateHover(stateName);
         d3.select(this).attr("stroke-width", 2).attr("stroke", "hsl(var(--foreground))");
 
-        const result = stateResults.get(stateName);
+        const data = getStateData(stateName, stateResults, election.year);
         if (tooltipRef.current) {
           const tooltip = tooltipRef.current;
           tooltip.style.display = "block";
           tooltip.style.left = `${event.offsetX + 12}px`;
           tooltip.style.top = `${event.offsetY - 10}px`;
 
-          if (result) {
-            const seatsHtml = result.seats
+          if (data) {
+            const displayName = data.displayName;
+            const seatsHtml = data.result.seats
               .filter(s => s.count > 0)
               .sort((a, b) => b.count - a.count)
               .slice(0, 5)
@@ -91,7 +121,7 @@ export default function IndiaMap({ election, onStateHover }: IndiaMapProps) {
                   `<span style="color:${partyColors[s.party] || '#999'}">${s.party}</span>: ${s.count}`
               )
               .join(" · ");
-            tooltip.innerHTML = `<strong>${stateName}</strong><br/><span style="font-size:11px">${seatsHtml}</span>`;
+            tooltip.innerHTML = `<strong>${displayName}</strong><br/><span style="font-size:11px">${seatsHtml}</span>`;
           } else {
             tooltip.innerHTML = `<strong>${stateName}</strong><br/><span style="font-size:11px;opacity:0.6">No data</span>`;
           }
@@ -119,7 +149,7 @@ export default function IndiaMap({ election, onStateHover }: IndiaMapProps) {
       .attr("stroke-width", 0.8)
       .attr("d", path as any)
       .attr("pointer-events", "none");
-  }, [geoData, stateResults, onStateHover]);
+  }, [geoData, stateResults, onStateHover, election.year]);
 
   return (
     <div className="relative" data-testid="india-map">
