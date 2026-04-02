@@ -30,6 +30,7 @@ export interface Election {
   states: StateResult[];
   coalitions: CoalitionInfo[];
   notes: string;
+  isProjected?: boolean;
 }
 
 export const partyColors: Record<string, string> = {
@@ -988,5 +989,67 @@ export const elections: Election[] = [
       { name: 'INDIA', parties: ['INC', 'SP', 'TMC', 'DMK', 'SHS(UBT)', 'NCPSP', 'AAP', 'RJD', 'CPM', 'CPI', 'JMM', 'OTH'], totalSeats: 234 },
     ],
     notes: 'BJP lost majority on its own for the first time since 2014. INDIA opposition alliance exceeded expectations. SP surged in UP. Congress doubled its seats. NDA formed government with coalition partners. Modi\'s third term.',
+  },
+
+  // ===================== 2029 (PROJECTED) =====================
+  {
+    year: 2029,
+    totalSeats: 543,
+    majorityMark: 272,
+    primeMinister: 'TBD',
+    pmParty: 'BJP',
+    turnoutPercentage: null,
+    totalVoters: null,
+    isProjected: true,
+    parties: [
+      { party: 'BJP', seats: 287, voteShare: 38.5, isWinner: true, color: getColor('BJP') },
+      { party: 'INC', seats: 80, voteShare: 22.0, isWinner: false, color: getColor('INC') },
+      { party: 'SP', seats: 25, voteShare: 3.8, isWinner: false, color: getColor('SP') },
+      { party: 'TMC', seats: 22, voteShare: 4.0, isWinner: false, color: getColor('TMC') },
+      { party: 'DMK', seats: 18, voteShare: 1.7, isWinner: false, color: getColor('DMK') },
+      { party: 'TDP', seats: 14, voteShare: 1.8, isWinner: false, color: getColor('TDP') },
+      { party: 'JDU', seats: 14, voteShare: 1.5, isWinner: false, color: getColor('JDU') },
+      { party: 'SS', seats: 10, voteShare: 1.3, isWinner: false, color: getColor('SS') },
+      { party: 'SHS(UBT)', seats: 5, voteShare: 1.0, isWinner: false, color: getColor('SHS(UBT)') },
+      { party: 'NCPSP', seats: 4, voteShare: 0.7, isWinner: false, color: getColor('NCPSP') },
+      { party: 'YSRCP', seats: 3, voteShare: 1.5, isWinner: false, color: getColor('YSRCP') },
+      { party: 'CPM', seats: 3, voteShare: 1.5, isWinner: false, color: getColor('CPM') },
+      { party: 'RJD', seats: 3, voteShare: 1.2, isWinner: false, color: getColor('RJD') },
+      { party: 'BJD', seats: 3, voteShare: 1.0, isWinner: false, color: getColor('BJD') },
+      { party: 'AAP', seats: 2, voteShare: 0.8, isWinner: false, color: getColor('AAP') },
+      { party: 'LJP', seats: 5, voteShare: 0.5, isWinner: false, color: getColor('LJP') },
+      { party: 'SAD', seats: 2, voteShare: 0.4, isWinner: false, color: getColor('SAD') },
+      { party: 'OTH', seats: 32, voteShare: 12.3, isWinner: false, color: getColor('OTH') },
+      { party: 'IND', seats: 11, voteShare: 4.4, isWinner: false, color: getColor('IND') },
+    ],
+    states: [
+      { state: 'Uttar Pradesh', winningParty: 'BJP', seats: [{ party: 'BJP', count: 52 }, { party: 'SP', count: 18 }, { party: 'INC', count: 5 }, { party: 'BSP', count: 2 }, { party: 'OTH', count: 3 }] },
+      { state: 'Bihar', winningParty: 'BJP', seats: [{ party: 'BJP', count: 17 }, { party: 'JDU', count: 12 }, { party: 'RJD', count: 3 }, { party: 'LJP', count: 5 }, { party: 'INC', count: 1 }, { party: 'OTH', count: 2 }] },
+      { state: 'West Bengal', winningParty: 'TMC', seats: [{ party: 'TMC', count: 22 }, { party: 'BJP', count: 16 }, { party: 'INC', count: 2 }, { party: 'OTH', count: 2 }] },
+      { state: 'Madhya Pradesh', winningParty: 'BJP', seats: [{ party: 'BJP', count: 27 }, { party: 'INC', count: 2 }] },
+      { state: 'Tamil Nadu', winningParty: 'DMK', seats: [{ party: 'DMK', count: 18 }, { party: 'INC', count: 8 }, { party: 'BJP', count: 5 }, { party: 'OTH', count: 8 }] },
+      { state: 'Maharashtra', winningParty: 'BJP', seats: [{ party: 'BJP', count: 18 }, { party: 'SS', count: 10 }, { party: 'INC', count: 8 }, { party: 'SHS(UBT)', count: 5 }, { party: 'NCPSP', count: 4 }, { party: 'OTH', count: 3 }] },
+      { state: 'Andhra Pradesh', winningParty: 'TDP', seats: [{ party: 'TDP', count: 14 }, { party: 'YSRCP', count: 3 }, { party: 'BJP', count: 5 }, { party: 'OTH', count: 3 }] },
+      { state: 'Telangana', winningParty: 'BJP', seats: [{ party: 'BJP', count: 9 }, { party: 'INC', count: 6 }, { party: 'OTH', count: 2 }] },
+      { state: 'Rajasthan', winningParty: 'BJP', seats: [{ party: 'BJP', count: 20 }, { party: 'INC', count: 5 }] },
+      { state: 'Gujarat', winningParty: 'BJP', seats: [{ party: 'BJP', count: 25 }, { party: 'INC', count: 1 }] },
+      { state: 'Punjab', winningParty: 'INC', seats: [{ party: 'INC', count: 6 }, { party: 'AAP', count: 2 }, { party: 'SAD', count: 2 }, { party: 'BJP', count: 2 }, { party: 'OTH', count: 1 }] },
+      { state: 'Haryana', winningParty: 'BJP', seats: [{ party: 'BJP', count: 7 }, { party: 'INC', count: 3 }] },
+      { state: 'Odisha', winningParty: 'BJP', seats: [{ party: 'BJP', count: 16 }, { party: 'BJD', count: 3 }, { party: 'INC', count: 1 }, { party: 'OTH', count: 1 }] },
+      { state: 'Karnataka', winningParty: 'BJP', seats: [{ party: 'BJP', count: 18 }, { party: 'INC', count: 8 }, { party: 'OTH', count: 2 }] },
+      { state: 'Kerala', winningParty: 'INC', seats: [{ party: 'INC', count: 12 }, { party: 'CPM', count: 3 }, { party: 'BJP', count: 2 }, { party: 'OTH', count: 3 }] },
+      { state: 'Assam', winningParty: 'BJP', seats: [{ party: 'BJP', count: 10 }, { party: 'INC', count: 2 }, { party: 'OTH', count: 2 }] },
+      { state: 'Delhi', winningParty: 'BJP', seats: [{ party: 'BJP', count: 7 }] },
+      { state: 'Himachal Pradesh', winningParty: 'BJP', seats: [{ party: 'BJP', count: 4 }] },
+      { state: 'Jammu and Kashmir', winningParty: 'BJP', seats: [{ party: 'BJP', count: 3 }, { party: 'JKNC', count: 1 }, { party: 'INC', count: 1 }] },
+      { state: 'Jharkhand', winningParty: 'BJP', seats: [{ party: 'BJP', count: 10 }, { party: 'JMM', count: 2 }, { party: 'INC', count: 1 }, { party: 'OTH', count: 1 }] },
+      { state: 'Chhattisgarh', winningParty: 'BJP', seats: [{ party: 'BJP', count: 10 }, { party: 'INC', count: 1 }] },
+      { state: 'Uttarakhand', winningParty: 'BJP', seats: [{ party: 'BJP', count: 5 }] },
+    ],
+    coalitions: [
+      { name: 'NDA', parties: ['BJP', 'TDP', 'JDU', 'SS', 'LJP', 'SAD', 'OTH'], totalSeats: 352 },
+      { name: 'INDIA', parties: ['INC', 'SP', 'TMC', 'DMK', 'SHS(UBT)', 'NCPSP', 'AAP', 'RJD', 'CPM', 'JMM', 'OTH'], totalSeats: 182 },
+    ],
+    notes: 'PROJECTED — Based on India Today-CVoter "Mood of the Nation" poll (January 2026). NDA projected at 352 seats (47% vote share) with BJP alone at 287. INDIA bloc projected at 182 seats (39% vote share). Actual results will depend on campaign dynamics, alliances, and events closer to the election.',
   },
 ];

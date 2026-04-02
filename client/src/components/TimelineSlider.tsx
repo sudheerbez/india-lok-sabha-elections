@@ -13,6 +13,10 @@ export default function TimelineSlider({
   onYearChange,
 }: TimelineSliderProps) {
   const years = useMemo(() => elections.map((e) => e.year), [elections]);
+  const projectedYears = useMemo(
+    () => new Set(elections.filter((e) => e.isProjected).map((e) => e.year)),
+    [elections]
+  );
 
   return (
     <div className="w-full" data-testid="timeline-slider">
@@ -22,6 +26,7 @@ export default function TimelineSlider({
             {years.map((year, i) => {
               const isSelected = year === selectedYear;
               const isDecade = year % 10 === 0 || year === 1951;
+              const isProjected = projectedYears.has(year);
               return (
                 <button
                   key={year}
@@ -37,9 +42,13 @@ export default function TimelineSlider({
                   <div
                     className={`
                       rounded-full transition-all duration-200
-                      ${isSelected
-                        ? "w-3 h-3 bg-[var(--saffron)] ring-2 ring-[var(--saffron)] ring-offset-2 ring-offset-background"
-                        : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground/70"
+                      ${isSelected && isProjected
+                        ? "w-3 h-3 bg-amber-500 ring-2 ring-amber-500 ring-offset-2 ring-offset-background"
+                        : isSelected
+                          ? "w-3 h-3 bg-[var(--saffron)] ring-2 ring-[var(--saffron)] ring-offset-2 ring-offset-background"
+                          : isProjected
+                            ? "w-2.5 h-2.5 bg-amber-400/60 border border-dashed border-amber-500 hover:bg-amber-400/80"
+                            : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground/70"
                       }
                     `}
                   />
@@ -47,15 +56,19 @@ export default function TimelineSlider({
                   <span
                     className={`
                       mt-1.5 text-[10px] leading-none timeline-year transition-all
-                      ${isSelected
-                        ? "text-foreground font-semibold text-xs"
-                        : isDecade
-                          ? "text-muted-foreground font-medium"
-                          : "text-transparent sm:text-muted-foreground/50"
+                      ${isSelected && isProjected
+                        ? "text-amber-600 dark:text-amber-400 font-semibold text-xs"
+                        : isSelected
+                          ? "text-foreground font-semibold text-xs"
+                          : isProjected
+                            ? "text-amber-500/70 font-medium"
+                            : isDecade
+                              ? "text-muted-foreground font-medium"
+                              : "text-transparent sm:text-muted-foreground/50"
                       }
                     `}
                   >
-                    {isSelected || isDecade ? year : `'${String(year).slice(2)}`}
+                    {isSelected || isDecade || isProjected ? year : `'${String(year).slice(2)}`}
                   </span>
                 </button>
               );

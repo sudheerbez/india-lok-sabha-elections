@@ -123,7 +123,7 @@ export default function ElectionExplorer() {
                 India Lok Sabha Elections
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                1951 – 2024
+                1951 – 2029
               </p>
             </div>
           </div>
@@ -144,19 +144,33 @@ export default function ElectionExplorer() {
           </button>
 
           <div className="flex-1 text-center">
-            <div className="text-3xl font-bold tracking-tight tabular-nums">
-              {election.year}
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-3xl font-bold tracking-tight tabular-nums">
+                {election.year}
+              </span>
+              {election.isProjected && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/50">
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a.5.5 0 0 1 .447.276l1.658 3.36 3.71.539a.5.5 0 0 1 .276.853l-2.684 2.616.634 3.694a.5.5 0 0 1-.725.527L8 11.347l-3.316 1.743a.5.5 0 0 1-.725-.527l.634-3.694L1.91 6.253a.5.5 0 0 1 .276-.853l3.71-.539 1.657-3.36A.5.5 0 0 1 8 1.5z"/></svg>
+                  Projected
+                </span>
+              )}
             </div>
             <div className="text-sm text-muted-foreground mt-0.5">
-              {election.primeMinister}
-              <span className="mx-1.5 text-muted-foreground/40">·</span>
-              <span
-                style={{
-                  color: partyColors[election.pmParty] || "#999",
-                }}
-              >
-                {election.pmParty}
-              </span>
+              {election.isProjected ? (
+                <span className="text-amber-600 dark:text-amber-400">Based on polling data</span>
+              ) : (
+                <>
+                  {election.primeMinister}
+                  <span className="mx-1.5 text-muted-foreground/40">·</span>
+                  <span
+                    style={{
+                      color: partyColors[election.pmParty] || "#999",
+                    }}
+                  >
+                    {election.pmParty}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
@@ -276,12 +290,39 @@ export default function ElectionExplorer() {
           </div>
         </div>
 
+        {/* Projected Disclaimer Banner */}
+        {election.isProjected && (
+          <div className="rounded-lg border border-amber-300/50 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-950/30 p-4">
+            <div className="flex items-start gap-2.5">
+              <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1.5a.5.5 0 0 1 .447.276l1.658 3.36 3.71.539a.5.5 0 0 1 .276.853l-2.684 2.616.634 3.694a.5.5 0 0 1-.725.527L8 11.347l-3.316 1.743a.5.5 0 0 1-.725-.527l.634-3.694L1.91 6.253a.5.5 0 0 1 .276-.853l3.71-.539 1.657-3.36A.5.5 0 0 1 8 1.5z"/>
+              </svg>
+              <div>
+                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+                  Projected Results
+                </p>
+                <p className="text-xs text-amber-700/80 dark:text-amber-400/70 mt-0.5 leading-relaxed">
+                  Seat projections based on the India Today-CVoter "Mood of the Nation" poll (January 2026). These are estimates, not actual election results. Final outcomes will depend on campaign dynamics, alliance formations, and events closer to the election.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Election Notes */}
         {election.notes && (
-          <div className="rounded-lg border border-border bg-card p-4">
+          <div className={`rounded-lg border p-4 ${
+            election.isProjected
+              ? "border-amber-300/30 dark:border-amber-700/30 bg-amber-50/50 dark:bg-amber-950/20"
+              : "border-border bg-card"
+          }`}>
             <div className="flex items-start gap-2">
-              <Info className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <Info className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+                election.isProjected ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
+              }`} />
+              <p className={`text-sm leading-relaxed ${
+                election.isProjected ? "text-amber-700 dark:text-amber-300/80" : "text-muted-foreground"
+              }`}>
                 {election.notes}
               </p>
             </div>
@@ -290,7 +331,7 @@ export default function ElectionExplorer() {
 
         {/* Footer */}
         <footer className="text-center py-4 text-[11px] text-muted-foreground">
-          Data sourced from Election Commission of India records. Use ← → arrow keys to navigate.
+          Data sourced from Election Commission of India records. 2029 projections from India Today-CVoter poll (Jan 2026). Use ← → arrow keys to navigate.
         </footer>
       </main>
     </div>
